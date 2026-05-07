@@ -1,5 +1,19 @@
 "use client";
 
+import {
+  ClaudeAI,
+  Cline,
+  Cody,
+  Cursor,
+  GoogleAntigravity,
+  KiloCode,
+  Lovable,
+  Windsurf,
+  Bolt,
+  V0,
+  Aider,
+  Continue,
+} from "@/utils/logos";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,21 +23,25 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-type Agent = { name: string; mark: string; tagline: string };
+type Agent = { name: string; svg_logo: React.ReactNode; tagline: string };
 
 const agents: Agent[] = [
-  { name: "Claude Code", mark: "✱", tagline: "Anthropic CLI" },
-  { name: "Cursor", mark: "▸", tagline: "AI-first IDE" },
-  { name: "Kiro Code", mark: "◆", tagline: "Spec-driven IDE" },
-  { name: "Antigravity", mark: "▲", tagline: "Multi-agent IDE" },
-  { name: "Windsurf", mark: "◐", tagline: "Codeium IDE" },
-  { name: "Cline", mark: "◇", tagline: "VS Code agent" },
-  { name: "Aider", mark: "▪", tagline: "Terminal pair" },
-  { name: "Continue", mark: "▷", tagline: "OSS extension" },
-  { name: "Cody", mark: "○", tagline: "Sourcegraph" },
-  { name: "v0", mark: "/", tagline: "Vercel UI gen" },
-  { name: "Lovable", mark: "♥", tagline: "Visual builder" },
-  { name: "Bolt", mark: "⚡", tagline: "StackBlitz" },
+  { name: "Claude Code", svg_logo: <ClaudeAI />, tagline: "Anthropic CLI" },
+  { name: "Cursor", svg_logo: <Cursor />, tagline: "AI-first IDE" },
+  { name: "Kiro Code", svg_logo: <KiloCode />, tagline: "Spec-driven IDE" },
+  {
+    name: "Antigravity",
+    svg_logo: <GoogleAntigravity />,
+    tagline: "Multi-agent IDE",
+  },
+  { name: "Windsurf", svg_logo: <Windsurf />, tagline: "Codeium IDE" },
+  { name: "Cline", svg_logo: <Cline />, tagline: "VS Code agent" },
+  { name: "Aider", svg_logo: <Aider />, tagline: "Terminal pair" },
+  { name: "Continue", svg_logo: <Continue />, tagline: "OSS extension" },
+  { name: "Cody", svg_logo: <Cody />, tagline: "Sourcegraph" },
+  { name: "v0", svg_logo: <V0 />, tagline: "Vercel UI gen" },
+  { name: "Lovable", svg_logo: <Lovable />, tagline: "Visual builder" },
+  { name: "Bolt", svg_logo: <Bolt />, tagline: "StackBlitz" },
 ];
 
 export function AgentsStrip() {
@@ -43,15 +61,19 @@ export function AgentsStrip() {
       tl.from(".agents-eyebrow", { y: 14, opacity: 0, duration: 0.5 })
         .from(".agents-headline", { y: 18, opacity: 0, duration: 0.6 }, "-=0.3")
         .from(".agents-sub", { y: 14, opacity: 0, duration: 0.5 }, "-=0.4")
-        .from(".agent-cell", {
-          y: 16,
-          opacity: 0,
-          stagger: 0.04,
-          duration: 0.45,
-          ease: "power2.out",
-        }, "-=0.3");
+        .from(
+          ".agent-cell",
+          {
+            y: 16,
+            opacity: 0,
+            stagger: 0.04,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          "-=0.3",
+        );
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
@@ -61,7 +83,10 @@ export function AgentsStrip() {
       className="relative isolate overflow-hidden border-y border-[color:var(--border)] bg-[color:var(--bg-subtle)] py-20 sm:py-28"
     >
       {/* Faded grid background */}
-      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 grid-pattern opacity-50"
+        aria-hidden
+      />
       {/* Soft accent bloom */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-64"
@@ -80,10 +105,24 @@ export function AgentsStrip() {
             12+ agents · Agent-agnostic
           </div>
           <h2 className="agents-headline font-display mt-6 text-[clamp(2rem,4.5vw,3rem)] leading-[1.1] tracking-tight text-[color:var(--text-primary)]">
-            Works with any agent that <em className="not-italic gradient-text">reads files</em>.
+            Works with any agent that{" "}
+            <em className="not-italic gradient-text">reads files</em>.
           </h2>
           <p className="agents-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-            VibeKit's 4 generated files plus the master prompt are plain markdown — drop them into <strong className="font-medium text-[color:var(--text-primary)]">CLAUDE.md</strong>, <strong className="font-medium text-[color:var(--text-primary)]">.cursorrules</strong>, <strong className="font-medium text-[color:var(--text-primary)]">.kiro</strong>, or any other context format. The framework moves with you.
+            VibeKit's 4 generated files plus the master prompt are plain
+            markdown — drop them into{" "}
+            <strong className="font-medium text-[color:var(--text-primary)]">
+              CLAUDE.md
+            </strong>
+            ,{" "}
+            <strong className="font-medium text-[color:var(--text-primary)]">
+              .cursorrules
+            </strong>
+            ,{" "}
+            <strong className="font-medium text-[color:var(--text-primary)]">
+              .kiro
+            </strong>
+            , or any other context format. The framework moves with you.
           </p>
         </div>
 
@@ -96,10 +135,10 @@ export function AgentsStrip() {
             >
               {/* Mark badge */}
               <span
-                className="grid h-10 w-10 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] font-mono text-[16px] sm:text-[20px] text-[color:var(--text-secondary)] transition-colors group-hover:border-[color:var(--accent)] group-hover:text-[color:var(--accent)]"
+                className="grid h-10 w-10 sm:h-12 sm:w-12 shrink-0 p-2 place-items-center rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] font-mono text-[16px] sm:text-[20px] text-[color:var(--text-primary)] transition-colors group-hover:border-[color:var(--accent)] group-hover:text-[color:var(--accent)]"
                 aria-hidden
               >
-                {a.mark}
+                {a.svg_logo}
               </span>
 
               <div className="min-w-0 flex-1">
@@ -123,7 +162,8 @@ export function AgentsStrip() {
 
         {/* Footnote */}
         <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
-          Tested with all 12 agents listed · Compatible with any agent that ingests project files
+          Tested with all 12 agents listed · Compatible with any agent that
+          ingests project files
         </p>
       </div>
     </section>
