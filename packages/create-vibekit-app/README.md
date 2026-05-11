@@ -102,7 +102,7 @@ packages/create-vibekit-app/
 
 ```bash
 # from the monorepo root
-git clone https://github.com/MUKE-coder/vibekit.git
+git clone https://github.com/mosespace/vibekit_pro.git
 cd vibekit
 pnpm install
 ```

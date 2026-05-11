@@ -528,7 +528,7 @@ or tell me what to adjust.`}
           <CopyBlock
             filename="terminal"
             label="One-time clone (delete after copying)"
-            code={`git clone https://github.com/MUKE-coder/vibekit.git /tmp/vibekit
+            code={`git clone https://github.com/mosespace/vibekit_pro.git /tmp/vibekit
 
 cp /tmp/vibekit/master_prompt.md ./master_prompt.md
 cp /tmp/vibekit/jb-components.md ./jb-components.md

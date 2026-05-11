@@ -46,7 +46,7 @@ export function FrameworkFiles() {
           <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--text-tertiary)]/40" />
           <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--text-tertiary)]/40" />
           <span className="ml-3 font-mono text-[12px] text-[color:var(--text-tertiary)]">
-            github.com/MUKE-coder/vibekit
+            github.com/mosespace/vibekit_pro
           </span>
         </div>
         <pre className="overflow-x-auto p-5 sm:p-7 font-mono text-[12.5px] leading-[1.7] text-[color:var(--text-primary)]">

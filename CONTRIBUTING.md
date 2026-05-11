@@ -23,7 +23,7 @@ This guide covers the main ways you can contribute.
 
 ## Reporting bugs
 
-If something breaks, open an [issue](https://github.com/MUKE-coder/vibekit/issues/new?template=bug-report.md). Include:
+If something breaks, open an [issue](https://github.com/mosespace/vibekit_pro/issues/new?template=bug-report.md). Include:
 
 - Your OS and Node version
 - Which provider you were using
@@ -40,7 +40,7 @@ Since this is early and tested on a small number of configurations, **any reprod
 ### Setup
 
 ```bash
-git clone https://github.com/MUKE-coder/vibekit.git
+git clone https://github.com/mosespace/vibekit_pro.git
 cd vibekit
 pnpm install
 ```
@@ -185,6 +185,6 @@ This is a small project. We're not optimizing for a large contributor count we'r
 
 ## Questions?
 
-Open an issue or start a [Discussion](https://github.com/MUKE-coder/vibekit/discussions).
+Open an issue or start a [Discussion](https://github.com/mosespace/vibekit_pro/discussions).
 
 Thanks for shipping with us.

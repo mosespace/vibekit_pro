@@ -7,8 +7,8 @@ import path from "node:path";
  */
 export function readPrompt(filename: string): string {
   const candidates = [
-    path.resolve(process.cwd(), filename),             // synced into web/ by prebuild
-    path.resolve(process.cwd(), "..", filename),       // build run from web/, files at repo root
+    path.resolve(process.cwd(), filename), // synced into web/ by prebuild
+    path.resolve(process.cwd(), "..", filename), // build run from web/, files at repo root
     path.resolve(process.cwd(), "..", "..", filename), // nested deploy contexts
   ];
 
@@ -22,5 +22,5 @@ export function readPrompt(filename: string): string {
   }
 
   // Fallback: return a stub so the page builds even if files are missing.
-  return `# ${filename}\n\nCould not load this file at build time. View it on GitHub: https://github.com/MUKE-coder/vibekit/blob/main/${filename}`;
+  return `# ${filename}\n\nCould not load this file at build time. View it on GitHub: https://github.com/mosespace/vibekit_pro/blob/main/${filename}`;
 }
