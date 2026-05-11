@@ -51,8 +51,11 @@ export const metadata: Metadata = {
     "shadcn/ui",
     "AI app builder",
   ],
-  authors: [{ name: "JB (Muke Johnbaptist)", url: SITE.authorUrl }],
-  creator: "JB (Muke Johnbaptist)",
+  authors: [
+    { name: "Moses Kisakye", url: SITE.authorUrl },
+    { name: "JB (Muke Johnbaptist)", url: SITE.originalAuthorUrl },
+  ],
+  creator: "Moses Kisakye",
   publisher: "Desishub Technologies",
   alternates: { canonical: "/" },
   openGraph: {
@@ -94,11 +97,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               name: SITE.name,
               url: SITE.url,
               description: SITE.description,
-              author: {
-                "@type": "Person",
-                name: "JB (Muke Johnbaptist)",
-                url: SITE.authorUrl,
-              },
+              author: [
+                { "@type": "Person", name: "Moses Kisakye", url: SITE.authorUrl },
+                { "@type": "Person", name: "JB (Muke Johnbaptist)", url: SITE.originalAuthorUrl },
+              ],
               publisher: {
                 "@type": "Organization",
                 name: "Desishub Technologies",
@@ -120,7 +122,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
               description: SITE.description,
               url: SITE.url,
-              author: { "@type": "Person", name: "JB (Muke Johnbaptist)" },
+              author: { "@type": "Person", name: "Moses Kisakye", url: SITE.authorUrl },
             }),
           }}
         />

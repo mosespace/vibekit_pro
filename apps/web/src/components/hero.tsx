@@ -60,7 +60,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
           </span>
-          The framework for vibe coders · v1.0
+          The framework for vibe coders · Fork by mosespace
         </div>
 
         {/* Orbital mark — scales down on mobile */}
@@ -89,15 +89,32 @@ export function Hero() {
         </div>
 
         {/* Install command */}
-        <div className="mx-auto mt-10 max-w-md px-2 sm:px-0">
-          <div className="hero-cta flex items-center gap-2 sm:gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 sm:px-4 py-2.5 sm:py-3 text-left font-mono text-[12px] sm:text-[13px] min-w-0">
-            <span className="text-[color:var(--text-tertiary)] shrink-0">$</span>
+        <div className="mx-auto mt-10 max-w-lg px-2 sm:px-0 space-y-2">
+          <div className="hero-cta flex items-center gap-2 sm:gap-3 rounded-md border border-[color:var(--accent)]/40 bg-[color:var(--bg-elevated)] px-3 sm:px-4 py-2.5 sm:py-3 text-left font-mono text-[12px] sm:text-[13px] min-w-0">
+            <span className="text-[color:var(--accent)] shrink-0">$</span>
             <code className="flex-1 truncate text-[color:var(--text-primary)]">
-              git clone github.com/MUKE-coder/vibekit
+              npx create-vibekit-app my-app
             </code>
-            <span className="hidden sm:inline text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)] shrink-0">
-              copy
-            </span>
+          </div>
+          <div className="flex items-center justify-center gap-1.5 font-mono text-[10px] text-[color:var(--text-tertiary)]">
+            <span>or</span>
+            <a
+              href={SITE.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[color:var(--text-secondary)] transition-colors"
+            >
+              git clone github.com/mosespace/vibekit_pro
+            </a>
+            <span className="opacity-50">·</span>
+            <a
+              href={SITE.upstreamGithub}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[color:var(--text-secondary)] transition-colors"
+            >
+              upstream: MUKE-coder/vibekit
+            </a>
           </div>
         </div>
 

@@ -142,7 +142,7 @@ export default function Quickstart() {
                           ].map((f) => (
                             <li key={f.file} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                               <a
-                                href={`https://github.com/MUKE-coder/vibekit/blob/main/${f.file}`}
+                                href={`https://github.com/mosespace/vibekit_pro/blob/main/${f.file}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="font-mono text-[13px] text-[color:var(--accent)] underline underline-offset-4 hover:no-underline"
@@ -154,7 +154,14 @@ export default function Quickstart() {
                           ))}
                         </ul>
                         <p className="mt-4 text-[12.5px] text-[color:var(--text-tertiary)]">
-                          Tip: <code className="font-mono text-[12px] rounded border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-1.5 py-0.5">git clone https://github.com/MUKE-coder/vibekit.git</code>, then copy these three files into your project.
+                          Tip: run{" "}
+                          <code className="font-mono text-[12px] rounded border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-1.5 py-0.5">
+                            npx create-vibekit-app my-app
+                          </code>{" "}
+                          — it copies everything automatically. Or clone the fork:{" "}
+                          <code className="font-mono text-[12px] rounded border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-1.5 py-0.5">
+                            git clone https://github.com/mosespace/vibekit_pro.git
+                          </code>
                         </p>
                       </div>
                     </div>

@@ -7,7 +7,7 @@ const cols = [
     links: [
       { name: "Tutorial — TaskFlow course", href: "/tutorial" },
       { name: "Quickstart", href: "/docs/quickstart" },
-      { name: "GitHub", href: SITE.github },
+      { name: "GitHub (fork)", href: SITE.github },
       { name: "CLAUDE_PROMPT.md", href: `${SITE.github}/blob/main/CLAUDE_PROMPT.md` },
       { name: "Pre-deploy review", href: `${SITE.github}/blob/main/pre-deploy-review.md` },
     ],
@@ -15,11 +15,11 @@ const cols = [
   {
     label: "Reference",
     links: [
-      { name: "Database guide", href: `${SITE.github}/blob/main/database-guide.md` },
-      { name: "Deployment", href: `${SITE.github}/blob/main/deployment.md` },
-      { name: "Environment vars", href: `${SITE.github}/blob/main/environment-variables.md` },
-      { name: "Monetization", href: `${SITE.github}/blob/main/monetization-guide.md` },
-      { name: "Troubleshooting", href: `${SITE.github}/blob/main/troubleshooting.md` },
+      { name: "Database guide", href: `${SITE.upstreamGithub}/blob/main/database-guide.md` },
+      { name: "Deployment", href: `${SITE.upstreamGithub}/blob/main/deployment.md` },
+      { name: "Environment vars", href: `${SITE.upstreamGithub}/blob/main/environment-variables.md` },
+      { name: "Monetization", href: `${SITE.upstreamGithub}/blob/main/monetization-guide.md` },
+      { name: "Troubleshooting", href: `${SITE.upstreamGithub}/blob/main/troubleshooting.md` },
     ],
   },
   {
@@ -32,13 +32,13 @@ const cols = [
     ],
   },
   {
-    label: "Author",
+    label: "Authors",
     links: [
-      { name: "JB · Desishub", href: SITE.authorUrl },
+      { name: "Moses Kisakye (fork)", href: SITE.authorUrl },
+      { name: "JB · Desishub (original)", href: SITE.originalAuthorUrl },
       { name: "Desishub Technologies", href: "https://desishub.com" },
-      { name: "YouTube", href: "https://www.youtube.com/@JBWEBDEVELOPER" },
-      { name: "LinkedIn", href: "https://www.linkedin.com/in/muke-johnbaptist/" },
-      { name: "TikTok", href: "https://www.tiktok.com/@jbdesishub" },
+      { name: "JB on YouTube", href: "https://www.youtube.com/@JBWEBDEVELOPER" },
+      { name: "Upstream repo", href: SITE.upstreamGithub },
     ],
   },
 ];
@@ -83,7 +83,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-[color:var(--border)] pt-8 sm:flex-row">
+        <div className="mt-14 flex flex-col gap-4 border-t border-[color:var(--border)] pt-8 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="grid h-7 w-7 place-items-center rounded-md bg-[color:var(--text-primary)] text-[color:var(--text-inverse)] font-mono text-[11px] font-bold">
               VK
@@ -93,18 +93,31 @@ export function Footer() {
             </span>
           </div>
 
-          <p className="text-[13px] text-[color:var(--text-tertiary)]">
-            MIT licensed · Built by{" "}
-            <a
-              href={SITE.authorUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]"
-            >
-              JB (Muke Johnbaptist)
-            </a>{" "}
-            · Desishub Technologies
-          </p>
+          <div className="flex flex-col gap-1 sm:items-end">
+            <p className="text-[13px] text-[color:var(--text-tertiary)]">
+              MIT licensed · Fork maintained by{" "}
+              <a
+                href={SITE.authorUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors"
+              >
+                Moses Kisakye
+              </a>
+            </p>
+            <p className="text-[12px] text-[color:var(--text-tertiary)]">
+              Original framework by{" "}
+              <a
+                href={SITE.originalAuthorUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[color:var(--text-secondary)] transition-colors"
+              >
+                JB (Muke Johnbaptist)
+              </a>
+              {" "}· Desishub Technologies
+            </p>
+          </div>
         </div>
       </div>
     </footer>
