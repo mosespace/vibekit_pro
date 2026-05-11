@@ -1,19 +1,32 @@
-import { providers } from "../providers";
+import { spinner, log } from "@clack/prompts";
+import pc from "picocolors";
+import { providers, type Provider } from "../providers";
 
-export async function detectProviders() {
-  console.log("Detecting available providers...");
+export interface DetectedProvider {
+  provider: Provider;
+  binary: string | null;
+}
+
+export async function detectProviders(): Promise<DetectedProvider[]> {
+  const s = spinner();
+  s.start("Detecting installed AI providers...");
+
   const results = await Promise.all(
-    providers.map(async (p) => {
-      const bin = await p.findBinary();
-      return { provider: p, binary: bin };
-    }),
+    providers.map(async (p) => ({
+      provider: p,
+      binary: await p.findBinary(),
+    })),
   );
 
+  s.stop("Provider detection complete.");
+
   for (const r of results) {
-    console.log(
-      ` - ${r.provider.name}: ${r.binary ? `found (${r.binary})` : "not found"}`,
-    );
+    if (r.binary) {
+      log.success(`${pc.bold(r.provider.name)} ${pc.dim(`→ ${r.binary}`)}`);
+    } else {
+      log.warn(`${pc.bold(r.provider.name)} ${pc.dim("→ not found")}`);
+    }
   }
 
-  return results.map((r) => ({ ...r }));
+  return results;
 }

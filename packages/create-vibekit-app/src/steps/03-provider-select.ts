@@ -1,34 +1,60 @@
-import readline from "readline";
+import { select, isCancel, cancel, note } from "@clack/prompts";
+import pc from "picocolors";
+import type { DetectedProvider } from "./02-provider-detect";
+import type { Provider } from "../providers";
 
 export async function selectProvider(
-  detected: Array<{ provider: any; binary: string | null }>,
-) {
-  console.log("\nChoose a provider to handoff to (enter the number):");
-  detected.forEach((d, i) => {
-    console.log(
-      ` ${i + 1}) ${d.provider.name} - ${d.binary ? "available" : "unavailable"}`,
+  detected: DetectedProvider[],
+): Promise<Provider> {
+  const available = detected.filter((d) => d.binary !== null);
+  const unavailable = detected.filter((d) => d.binary === null);
+
+  if (available.length === 0) {
+    note(
+      unavailable.map((d) => `  ${pc.bold(d.provider.name)}`).join("\n") +
+        "\n\nInstall one of the providers above and re-run.",
+      pc.red("No providers found"),
     );
+    process.exit(1);
+  }
+
+  const options = [
+    ...available.map((d) => ({
+      value: d.provider.id,
+      label: `${pc.green("●")} ${pc.bold(d.provider.name)}`,
+      hint: "installed",
+    })),
+    ...unavailable.map((d) => ({
+      value: d.provider.id,
+      label: `${pc.dim("○")} ${pc.dim(d.provider.name)}`,
+      hint: "not installed",
+    })),
+  ];
+
+  const chosen = await select({
+    message: "Which AI provider should build your project?",
+    options,
+    initialValue: available[0].provider.id,
   });
 
-  const choice = await prompt(`Select 1-${detected.length} (default 1): `);
-  const idx = Math.max(
-    0,
-    Math.min(detected.length - 1, Number(choice) - 1 || 0),
-  );
-  const selection = detected[idx];
-  console.log(`Selected: ${selection.provider.name}`);
-  return selection.provider;
-}
+  if (isCancel(chosen)) {
+    cancel("Cancelled.");
+    process.exit(0);
+  }
 
-function prompt(query: string) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  return new Promise<string>((resolve) =>
-    rl.question(query, (ans) => {
-      rl.close();
-      resolve(ans);
-    }),
-  );
+  const match = detected.find((d) => d.provider.id === chosen);
+  if (!match) {
+    cancel("Invalid selection.");
+    process.exit(1);
+  }
+
+  if (!match.binary) {
+    note(
+      `${pc.bold(match.provider.name)} is not installed.\n${match.provider.authHint}`,
+      pc.yellow("Provider unavailable"),
+    );
+    process.exit(1);
+  }
+
+  return match.provider;
 }
