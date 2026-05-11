@@ -1,234 +1,189 @@
-# Contributing to VibeKit
+# Contributing to create-vibekit-app
 
-Thanks for considering a contribution. VibeKit is community-driven — every component in the registry was built by someone shipping with AI agents in production.
+Thanks for wanting to help. This is early software — there are untested providers, untested operating systems, edge cases in the CLI flow, and plenty of room to improve. **All contributions are welcome.**
 
-This guide covers the most common contribution: **adding a new component to the JB Component Registry**. Other contributions (docs fixes, bug reports, framework refinements) are also welcome — open an issue or PR.
+This guide covers the main ways you can contribute.
+
+---
+
+> **Before you start:** This repo contains both the `create-vibekit-app` CLI (the thing we're actively building) and the original VibeKit framework docs at the root (the planning prompts, master prompt, guides). The CLI lives in `packages/create-vibekit-app/`. Most contributions will be in there.
 
 ---
 
 ## Table of contents
 
-1. [What makes a good VibeKit component](#what-makes-a-good-vibekit-component)
-2. [The contribution workflow](#the-contribution-workflow)
-3. [The component schema](#the-component-schema)
-4. [Quality checklist](#quality-checklist)
-5. [PR review timeline](#pr-review-timeline)
-6. [Other contributions](#other-contributions)
+1. [Reporting bugs](#reporting-bugs)
+2. [Contributing code](#contributing-code)
+3. [Adding a new provider](#adding-a-new-provider)
+4. [Improving the planning prompts](#improving-the-planning-prompts)
+5. [Adding a component to the JB registry](#adding-a-component-to-the-jb-registry)
+6. [Code of conduct](#code-of-conduct)
 
 ---
 
-## What makes a good VibeKit component
+## Reporting bugs
 
-A VibeKit component is **production-ready, opinionated, and reusable across projects**. Examples in the registry today: Better Auth UI, Stripe UI, File Storage UI, Data Table, MDX Blog, DGateway Shop.
+If something breaks, open an [issue](https://github.com/MUKE-coder/vibekit/issues/new?template=bug-report.md). Include:
 
-### Good fit
+- Your OS and Node version
+- Which provider you were using
+- The exact command you ran
+- What you expected vs what happened
+- Any error output
 
-- **Solves a recurring need** — auth, payments, file uploads, data tables, dashboards, AI features, search, charts.
-- **Self-contained** — installs with one `pnpm dlx shadcn@latest add <url>` and works on a fresh Next.js 16 project.
-- **Documented** — has a doc page (your blog, your GitHub README, anywhere accessible) explaining usage.
-- **Aligned with the stack** — Next.js 16 App Router, TypeScript, Tailwind v4, shadcn/ui, Prisma v7 if it touches the DB.
-
-### Not a good fit
-
-- Personal one-off components for a single project.
-- Wrappers around existing JB components.
-- Components that require a custom backend not commonly used (e.g. a proprietary CMS).
-- Components that overlap with existing entries (check `/components` first).
+Since this is early and tested on a small number of configurations, **any reproducible bug report is genuinely useful** — don't worry about whether the issue is "worth reporting."
 
 ---
 
-## The contribution workflow
+## Contributing code
 
-### 1. Build & host the component
-
-Build the component and publish it to a shadcn-compatible registry. Your own domain works:
-
-```
-https://yourdomain.com/r/your-component.json
-```
-
-The registry JSON should follow the [shadcn registry spec](https://ui.shadcn.com/docs/registry). Verify:
-
-```bash
-pnpm dlx shadcn@latest add https://yourdomain.com/r/your-component.json
-```
-
-works end-to-end on a fresh Next.js 16 project.
-
-### 2. Write a doc page
-
-Document what the component does. Anywhere accessible works:
-
-- A blog post on your own site
-- A GitHub README in the component's repo
-- A Notion page (public)
-- A page in the JB component blog (`https://jb.desishub.com`)
-
-This becomes the **"Read full guide"** link on the component's detail page.
-
-### 3. Open a pull request
-
-Fork the repo:
+### Setup
 
 ```bash
 git clone https://github.com/MUKE-coder/vibekit.git
 cd vibekit
-git checkout -b add-<component-slug>
+pnpm install
 ```
 
-Edit `web/src/lib/components-data.ts`. Append a new entry to the `components` array using [the schema below](#the-component-schema).
-
-Commit and push:
+The CLI lives at `packages/create-vibekit-app/`. Run it locally with:
 
 ```bash
-git add web/src/lib/components-data.ts
-git commit -m "Add <Component Name> to the registry"
-git push origin add-<component-slug>
+cd packages/create-vibekit-app
+pnpm dev my-test-app
 ```
 
-Open a PR. The `new-component.md` template will walk you through the checklist.
+TypeScript is checked with:
 
-### 4. Review & merge
-
-We review weekly. Most PRs need one or two iterations on copy, schema, or installation testing. Once merged:
-
-- Your component appears at `https://vibekit.desishub.com/components/<slug>`
-- It's listed in `jb-components.md`, which every Claude Code session reads
-- It becomes part of the agent's default toolkit across thousands of builds
-
----
-
-## The component schema
-
-All component metadata lives in one file: `web/src/lib/components-data.ts`. Append your entry to the `components` array.
-
-```ts
-{
-  slug: "my-component",
-  name: "My Component",
-  tagline: "One sentence — what it does, who it's for.",
-  category: "data", // auth | marketing | data | commerce | files | content | api | forms
-  categoryLabel: "Data",
-  install: "pnpm dlx shadcn@latest add https://your-registry.com/r/my-component.json",
-  blogUrl: "https://your-domain.com/blog/my-component",
-
-  prerequisites: [
-    "Next.js 16 + shadcn/ui",
-    "PostgreSQL database",
-    // anything else that must be set up first
-  ],
-
-  envVars: [
-    { name: "MY_API_KEY", description: "Where to get it (e.g. service dashboard)" },
-    // omit this field entirely if no env vars are needed
-  ],
-
-  features: [
-    "Bullet point — what it does (a feature, not marketing fluff)",
-    "Another bullet",
-    "3–6 bullets total is the sweet spot",
-  ],
-
-  whenToUse: "One sentence describing the project type or use case where this is the right tool.",
-  whenNotToUse: "One sentence describing when a different approach is better.",
-
-  filesAdded: [
-    "/route-it-creates",
-    "/api/endpoint-it-adds",
-    "components/component-name.tsx",
-    "Prisma schema additions: ModelName",
-    // list every file or route the install command produces
-  ],
-}
+```bash
+npx tsc --noEmit
 ```
 
-### Field-by-field
+### Workflow
 
-| Field | Description |
-|---|---|
-| `slug` | URL-safe identifier. Becomes `/components/<slug>`. Lowercase, hyphens, no spaces. |
-| `name` | Display name. Title case. Brief — "JB Better Auth UI" beats "The JB Better Auth UI Component System". |
-| `tagline` | One sentence under 100 characters. What it does + who it's for. |
-| `category` | One of: `auth` \| `marketing` \| `data` \| `commerce` \| `files` \| `content` \| `api` \| `forms`. Propose a new one in the PR if none fit. |
-| `categoryLabel` | Display label for the category. |
-| `install` | The exact command users run. Must be tested on a fresh Next.js 16 project. |
-| `blogUrl` | URL to a doc page explaining usage. |
-| `prerequisites` | Things that must exist before installing (database, other components, accounts). Optional. |
-| `envVars` | Each env var with name + description of where to obtain it. Omit field if none. |
-| `features` | 3–6 bullet points describing capabilities. No marketing fluff. |
-| `whenToUse` / `whenNotToUse` | One sentence each. Honest about tradeoffs. |
-| `filesAdded` | Every route, API endpoint, component, and schema change the install creates. **This is the most-checked field — be exhaustive.** |
+1. Fork the repo and create a branch: `git checkout -b fix/your-description`
+2. Make your change
+3. Run `npx tsc --noEmit` to confirm no type errors
+4. Open a PR — describe what you changed and why
 
-### Adding a new category
+No tests exist yet. Manual testing against a real provider is sufficient for now.
 
-If your component doesn't fit any existing category, propose a new one in your PR. Add it to:
+### What's in scope
 
-1. The `ComponentCategory` type in `components-data.ts`
-2. The `categories` array (with a label)
-
-We'll discuss in the PR whether the new category is the right call.
+- Bug fixes in any of the CLI steps
+- UX improvements to the clack terminal flow
+- New provider support
+- Better auth detection (finding credential file paths on different OSes)
+- Windows / macOS / Linux compatibility fixes
+- Improvements to the planning prompt templates
+- Docs corrections
 
 ---
 
-## Quality checklist
+## Adding a new provider
 
-Before you open the PR, confirm:
+Each provider is a single file in `packages/create-vibekit-app/src/providers/`. Adding one takes about 15 minutes.
 
-- [ ] Component is production-ready and documented (not a half-built prototype).
-- [ ] Install command works end-to-end on a fresh Next.js 16 project.
-- [ ] Schema entry includes every required field.
-- [ ] `filesAdded` is accurate — every route, API, component, schema change.
-- [ ] Env vars are enumerated with where to obtain them.
-- [ ] Component category fits one of the existing categories OR you propose a new one in the PR.
-- [ ] Component does not duplicate an existing JB component (check `/components` first).
-- [ ] Doc page (`blogUrl`) exists and is publicly accessible.
+### 1. Create the provider file
+
+Add `packages/create-vibekit-app/src/providers/<name>.ts` — or just add a `makeProvider({...})` call to `src/providers/index.ts` directly. The provider needs:
+
+- `id` — lowercase string identifier
+- `name` — display name shown in the CLI
+- `binaries` — array of binary names to search for (e.g. `["claude"]`)
+- `promptFile` — path inside `templates/planning-prompts/` for this provider
+- `contextFile` — file the agent auto-reads (e.g. `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`)
+- `authHint` — message shown to user if auth check fails
+- `checkAuth()` — returns `Promise<boolean>`, checks env vars or credential files
+
+### 2. Add a planning prompt template
+
+Copy `packages/create-vibekit-app/templates/planning-prompts/claude-code.md` to a new file named after your provider. Change the header line and the `contextFile` reference (`CLAUDE.md` → `AGENTS.md` etc.). The rest of the content is the same.
+
+### 3. Test it
+
+Run `pnpm dev my-test-app` and select your provider. Note anything that doesn't work and document it in the PR.
+
+### 4. Open the PR
+
+Describe which provider you added, what OS you tested on, and anything that's still rough.
 
 ---
 
-## PR review timeline
+## Improving the planning prompts
 
-- **First response:** within 7 days
-- **Typical merge:** 1–2 iterations of feedback
-- **Reasons we'd reject:** duplicates an existing component, doesn't follow the stack (e.g. uses Drizzle, Mongo, jsPDF), no doc page, install command doesn't work cleanly
+The planning prompts live in `packages/create-vibekit-app/templates/planning-prompts/`. They are based on the original `CLAUDE_PROMPT.md` framework prompt by JB.
 
-If we reject, we'll explain why and suggest where it might land instead.
+If you find that the AI skips the interview, generates incomplete files, misses a tech stack detail, or produces a poor `prompt.md`, the fix is usually in the prompt template.
+
+Changes to the prompts are welcome. Keep the original structure intact — the 4-file output, the interview process, the confirmation step before writing — and note in your PR what specific behavior you were trying to fix or improve.
+
+The `base.md` file in that folder is the raw, unchanged `CLAUDE_PROMPT.md` from the original framework. Keep it as the source of truth; the provider-specific variants are the ones the CLI actually uses.
 
 ---
 
-## Other contributions
+## Adding a component to the JB registry
 
-### Documentation fixes
+The JB Component Registry is JB's original work. Components are listed in `apps/web/src/lib/components-data.ts` and appear at `vibekit.desishub.com/components/<slug>`.
 
-Spot a typo, broken link, outdated screenshot? Open a PR directly — no schema needed.
+A VibeKit component is **production-ready, self-contained, and reusable** across Next.js projects. It installs with one command and aligns with the standard stack (Next.js 16, TypeScript, Tailwind v4, Prisma v7, shadcn/ui).
 
-### Framework refinements
+### Contribution workflow
 
-Have an opinion on the master prompt, design system, or pre-deploy review? Open a [Discussion](https://github.com/MUKE-coder/vibekit/discussions) first so we can align before code changes.
+1. **Build and host the component** at a public shadcn-compatible registry URL:
+   ```bash
+   # Verify it works on a fresh project
+   pnpm dlx shadcn@latest add https://your-registry.com/r/your-component.json
+   ```
 
-### Bug reports
+2. **Write a doc page** anywhere accessible (your blog, GitHub README, Notion).
 
-Open an [Issue](https://github.com/MUKE-coder/vibekit/issues) with:
+3. **Open a PR** with your schema entry appended to `apps/web/src/lib/components-data.ts`:
+   ```ts
+   {
+     slug: "my-component",
+     name: "My Component",
+     tagline: "One sentence — what it does and who it's for.",
+     category: "data", // auth | marketing | data | commerce | files | content | api | forms
+     categoryLabel: "Data",
+     install: "pnpm dlx shadcn@latest add https://your-registry.com/r/my-component.json",
+     blogUrl: "https://your-docs-url.com",
+     prerequisites: ["Next.js 16 + shadcn/ui"],
+     envVars: [
+       { name: "MY_API_KEY", description: "Get from your service dashboard" },
+     ],
+     features: [
+       "What it does (a capability, not marketing)",
+       "Another capability",
+     ],
+     whenToUse: "One sentence.",
+     whenNotToUse: "One sentence.",
+     filesAdded: [
+       "components/my-component.tsx",
+       "/api/my-endpoint",
+     ],
+   }
+   ```
 
-- What you were doing
-- What you expected
-- What happened instead
-- Your environment (OS, Node version, agent)
+### Component checklist
+
+- [ ] Works end-to-end on a fresh Next.js 16 project
+- [ ] Schema entry is complete — no empty fields
+- [ ] `filesAdded` lists every file and route the install creates
+- [ ] Doc page exists and is publicly accessible
+- [ ] Does not duplicate an existing JB component
 
 ---
 
 ## Code of conduct
 
-Be respectful, be honest, ship things. No corporate spam, no AI-generated marketing copy in PR descriptions, no drive-by "this should support X" issues without context.
+Be direct, be honest, be helpful. No spam. No vague "would be nice if" issues without context. No marketing copy in PR descriptions.
 
-VibeKit is a small project. We're optimizing for **quality of components** over quantity of contributors.
+This is a small project. We're not optimizing for a large contributor count — we're optimizing for things that actually work and help people ship.
 
 ---
 
 ## Questions?
 
-- [GitHub Discussions](https://github.com/MUKE-coder/vibekit/discussions)
-- Reach out to JB on [Twitter](https://twitter.com/jbwebdeveloper) or via [jb.desishub.com](https://jb.desishub.com)
+Open an issue or start a [Discussion](https://github.com/MUKE-coder/vibekit/discussions).
 
 Thanks for shipping with us.
-
-— JB & contributors
