@@ -1,4 +1,6 @@
-# create-vibekit-app
+# VIBEKIT CLI
+
+![VibeKit CLI](/assets/screenshots/vibekit-scafforld.png)
 
 > A CLI that automates the [VibeKit Framework](https://github.com/MUKE-coder/vibekit) workflow — plan your app with an AI agent, generate 4 project files, then build Phase 1 automatically.
 
@@ -69,12 +71,12 @@ Your app idea is injected into the full VibeKit planning prompt and written to `
 
 Then it generates **4 project files** directly in your project:
 
-| File | Purpose |
-|---|---|
-| `project-description.md` | Complete app spec — features, data model, pages, integrations |
-| `project-phases.md` | Phase-by-phase build blueprint with checkboxes |
-| `design-style-guide.md` | Fully customized design system (colors, typography, components) |
-| `prompt.md` | The build prompt for Session 2 |
+| File                     | Purpose                                                         |
+| ------------------------ | --------------------------------------------------------------- |
+| `project-description.md` | Complete app spec — features, data model, pages, integrations   |
+| `project-phases.md`      | Phase-by-phase build blueprint with checkboxes                  |
+| `design-style-guide.md`  | Fully customized design system (colors, typography, components) |
+| `prompt.md`              | The build prompt for Session 2                                  |
 
 Close the provider when planning is done.
 
@@ -147,12 +149,12 @@ After Session 1 completes, the agent also writes:
 
 ## Provider support
 
-| Provider | Detect | Auth check | Tested |
-|---|---|---|---|
-| Claude Code | Yes | Credential file + `ANTHROPIC_API_KEY` | Yes |
-| Codex (OpenAI) | Yes | `OPENAI_API_KEY` | No |
-| Gemini CLI | Yes | Credential file + `GOOGLE_API_KEY` | No |
-| OpenCode | Yes | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | No |
+| Provider       | Detect | Auth check                             | Tested |
+| -------------- | ------ | -------------------------------------- | ------ |
+| Claude Code    | Yes    | Credential file + `ANTHROPIC_API_KEY`  | Yes    |
+| Codex (OpenAI) | Yes    | `OPENAI_API_KEY`                       | No     |
+| Gemini CLI     | Yes    | Credential file + `GOOGLE_API_KEY`     | No     |
+| OpenCode       | Yes    | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | No     |
 
 If you test on a provider that isn't marked Yes, please open an issue or PR with your findings.
 
@@ -162,23 +164,23 @@ If you test on a provider that isn't marked Yes, please open an issue or PR with
 
 Every project built with this framework uses:
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5.9 |
-| Database | Neon Serverless Postgres |
-| ORM | Prisma v7 |
-| Auth | Better Auth |
-| Data fetching | React Query + Fetch API |
-| Validation | Zod + React Hook Form |
-| Styling | Tailwind CSS v4 + shadcn/ui |
-| PDF | @react-pdf/renderer |
-| Excel | xlsx |
-| Email | Resend + React Email |
-| Payments | Stripe |
-| File storage | Cloudflare R2 / UploadThing |
-| Deployment | Vercel + Cloudflare |
-| Components | JB Component Registry |
+| Layer         | Technology                  |
+| ------------- | --------------------------- |
+| Framework     | Next.js 16 (App Router)     |
+| Language      | TypeScript 5.9              |
+| Database      | Neon Serverless Postgres    |
+| ORM           | Prisma v7                   |
+| Auth          | Better Auth                 |
+| Data fetching | React Query + Fetch API     |
+| Validation    | Zod + React Hook Form       |
+| Styling       | Tailwind CSS v4 + shadcn/ui |
+| PDF           | @react-pdf/renderer         |
+| Excel         | xlsx                        |
+| Email         | Resend + React Email        |
+| Payments      | Stripe                      |
+| File storage  | Cloudflare R2 / UploadThing |
+| Deployment    | Vercel + Cloudflare         |
+| Components    | JB Component Registry       |
 
 ---
 
@@ -215,4 +217,4 @@ MIT — use freely, build boldly.
 
 ---
 
-*VibeKit Framework by [JB (Muke Johnbaptist)](https://jb.desishub.com) · CLI by the community*
+_VibeKit Framework by [JB (Muke Johnbaptist)](https://jb.desishub.com) · CLI by the community_
