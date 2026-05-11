@@ -1,211 +1,211 @@
-# VibeKit Framework — Build Production Apps with Claude Code
+# create-vibekit-app
 
-> A structured framework for building production-grade Next.js apps with Claude Code/Any agent — without burning tokens, shipping broken code, or getting stuck.
+> A CLI that automates the [VibeKit Framework](https://github.com/MUKE-coder/vibekit) workflow — plan your app with an AI agent, generate 4 project files, then build Phase 1 automatically.
 
-**By JB (Muke Johnbaptist) · [jb.desishub.com](https://jb.desishub.com) · Desishub Technologies**
-
----
-
-## What Is VibeKit Framework?
-
-VibeKit Framework is a **planning + building system** for vibe coders who use Claude Code/any agent to build real Next.js applications. It gives you:
-
-- A **master prompt** that makes Claude Code write production-quality code (not AI slop)
-- A **planning workflow** that generates 4 project files from your app idea
-- **Reference guides** for database, deployment, environment variables, design, payments, and troubleshooting
-- A **Claude Code skill** that enforces the framework standards automatically
+**Built on top of the VibeKit Framework by [JB (Muke Johnbaptist)](https://jb.desishub.com) · [Desishub Technologies](https://desishub.com)**
 
 ---
 
-## The Problems VibeKit Solves
-
-Every vibe coder building with AI hits the same walls. VibeKit is designed to remove each one.
-
-| Pain                              | What it looks like                                                                              | How VibeKit solves it                                                                                                                     |
-| --------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI slop design**                | Every app looks the same — purple gradients, generic shadcn defaults, no brand identity         | `design-style-guide.md` is customized per project (colors, typography, spacing, component specs) and Claude Code follows it exactly       |
-| **Inconsistent UI**               | Buttons, cards, and forms look slightly different on every page                                 | Design tokens defined in one place, enforced by the master prompt across every component                                                  |
-| **Shipping broken auth**          | AI writes insecure login flows, missing password reset, no OAuth, session bugs                  | `jb-components.md` points Claude to install JB Better Auth UI — battle-tested auth in one command                                         |
-| **Burning tokens**                | $100–$200 per project because AI rewrites boilerplate every time (auth, tables, forms, uploads) | JB Component Registry covers the big primitives — AI installs and wires up instead of writing from scratch (saves 60–80% tokens)          |
-| **Getting stuck in loops**        | AI tries the same broken fix repeatedly, context gets polluted, progress stalls                 | Phase-based build (`project-phases.md`) + rescue prompts in `prompt-engineering.md` + `troubleshooting.md` playbook                       |
-| **No plan, no clarity**           | Starting with "build me a SaaS" and hoping for the best                                         | Claude interviews you first, generates `project-description.md` + `project-phases.md` — a clear blueprint before a single line is written |
-| **Tech stack chaos**              | AI picks a different stack every project — jsPDF here, Drizzle there, useEffect for data        | Master prompt locks the stack: Next.js 16 + Prisma v7 + React Query + Zod + @react-pdf/renderer + xlsx — always                           |
-| **Prisma version drift**          | AI mixes Prisma v6 and v7 patterns, breaks the build                                            | Master prompt enforces Prisma v7 patterns exactly (generator, custom output path, adapter-pg)                                             |
-| **Deployment confusion**          | App works locally, breaks in production — env vars, DNS, SSL, email spam                        | `deployment.md` + `environment-variables.md` walk through every step with checklists                                                      |
-| **Vague prompts = vague code**    | "Make it look better" produces unpredictable changes that break other things                    | `prompt-engineering.md` teaches the 5-part formula and context-loading technique                                                          |
-| **Payment setup hell**            | Stripe keys, webhooks, feature gating, billing pages — most builds never ship monetization      | `monetization-guide.md` + JB Stripe UI component handle the full flow                                                                     |
-| **Losing track of progress**      | Mid-build, no idea what's done vs. what's left                                                  | Phase tasks in `project-phases.md` are checkboxes — Claude Code checks them off as it goes                                                |
-| **No rescue plan when AI breaks** | Build stalls for hours because AI keeps making it worse                                         | Rescue prompts + hard-reset protocol + the V0 bypass technique in `prompt-engineering.md`                                                 |
+> **Alpha software.** This CLI has been tested on a small number of devices (Windows 11) and with Claude Code as the primary provider. Other providers (Codex, Gemini CLI, OpenCode) are wired up but largely untested. Expect rough edges, bugs, and missing polish. Contributions and bug reports are very welcome.
 
 ---
 
-## The Standard Tech Stack
+## What is this?
 
-Every project built with this framework uses this stack. Do not deviate unless the user has a specific reason.
+The [VibeKit Framework](https://github.com/MUKE-coder/vibekit) is a planning + building system for vibe coders using AI agents to build production Next.js apps. The original workflow is manual:
 
-| Layer          | Technology                   | Why                                                          |
-| -------------- | ---------------------------- | ------------------------------------------------------------ |
-| Framework      | Next.js 16 (App Router)      | Latest App Router with React 19                              |
-| Language       | TypeScript 5.9               | Type safety, better DX                                       |
-| Database       | Neon — Serverless Postgres   | Free tier, instant setup, serverless scale                   |
-| ORM            | Prisma v7                    | Type-safe, AI reads schema easily                            |
-| Authentication | Better Auth                  | Secure, extensible, Prisma-compatible                        |
-| Data Fetching  | React Query + Fetch API      | Caching, refetching, loading states built-in                 |
-| API Layer      | API Routes (Route Handlers)  | Server-side logic via Next.js App Router                     |
-| Validation     | Zod + React Hook Form        | Type-safe validation on client and server                    |
-| PDF Generation | @react-pdf/renderer          | React components to PDF, full styling control                |
-| Excel Export   | xlsx                         | Read/write Excel files, lightweight and reliable             |
-| File Storage   | Cloudflare R2 or UploadThing | R2 for S3-compatible storage, UploadThing for simple uploads |
-| Email          | Resend + React Email         | Best DX, great deliverability                                |
-| Payments       | Stripe                       | Industry standard, webhook-driven                            |
-| Styling        | Tailwind CSS v4 + shadcn/ui  | AI knows these patterns well                                 |
-| Deployment     | Vercel                       | One-click, preview URLs, zero config                         |
-| Domain & DNS   | Cloudflare                   | Free SSL, fast DNS, easy management                          |
-| Components     | JB Component Registry        | Production-ready shadcn components                           |
+1. Copy `CLAUDE_PROMPT.md` → paste into Claude.ai → answer questions → download 4 planning files
+2. Copy framework files into your project root
+3. Open Claude Code → paste `prompt.md` → start building
 
-> **File Uploads — R2 vs UploadThing:**
->
-> - **Cloudflare R2 / AWS S3** — Full control, large files, S3-compatible workflows.
-> - **UploadThing** — Simpler setup, great for image uploads. Follow the [UploadThing setup guide](https://jb.desishub.com/blog/image-upload-with-uploadthing).
->   Choose based on your project needs.
-
----
-
-## How To Use This Framework
-
-### Step 1 — Copy the planning prompt
-
-Copy the contents of [`CLAUDE_PROMPT.md`](./CLAUDE_PROMPT.md) from this repository.
-
-### Step 2 — Open Claude
-
-Go to [claude.ai](https://claude.ai) and start a new conversation.
-
-### Step 3 — Paste and add your idea
-
-Paste the contents of `CLAUDE_PROMPT.md` into Claude, then add your app idea at the bottom:
+**`create-vibekit-app` automates all of that** into a single command with two guided sessions:
 
 ```
-[CLAUDE_PROMPT.md contents pasted here]
-
-MY IDEA: I want to build a school management system where teachers can manage students,
-track attendance, and parents can log in to see their child's progress and pay school fees.
+npx create-vibekit-app my-app
 ```
-
-### Step 4 — Answer Claude's questions
-
-Claude will ask you 6–10 questions about your project. Answer honestly and completely.
-
-### Step 5 — Get your 4 project files
-
-Claude will generate:
-
-| File                     | Purpose                                                                         |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| `project-description.md` | Complete description of your app — features, data model, pages, integrations    |
-| `project-phases.md`      | Build blueprint with phases, tasks, and install commands                        |
-| `design-style-guide.md`  | Fully customized visual design system (colors, typography, spacing, components) |
-| `prompt.md`              | The prompt you paste into Claude Code to start building                         |
-
-Save all 4 files into your project root folder.
-
-### Step 6 — Copy the framework files
-
-Copy these 2 files from this repository into your project root:
-
-- [`master_prompt.md`](./master_prompt.md) — Tech stack rules, Prisma v7 patterns, coding standards
-- [`jb-components.md`](./jb-components.md) — JB component registry reference (when to use each)
-
-### Step 7 — Start building with Claude Code
-
-Open Claude Code in your project directory and paste the contents of `prompt.md`. Claude Code will:
-
-1. Read `master_prompt.md`, `design-style-guide.md`, `jb-components.md`, `project-description.md`, and `project-phases.md`
-2. Start with Phase 1 (Foundation)
-3. Install JB components before writing from scratch
-4. Stop after each phase for your confirmation
-5. Follow the design system and coding standards exactly
 
 ---
 
-## Framework Files
+## How it works
 
 ```
-vibekit/
-├── README.md                    ← You are here
-├── CLAUDE_PROMPT.md             ← Paste this into Claude to plan your project
+npx create-vibekit-app my-app
+```
+
+**Step 1 — CLI collects your idea**
+
+```
+┌  create-vibekit-app
 │
-├── master_prompt.md             ← Coding standards for Claude Code (copy to your project)
-├── design-style-guide.md        ← Design style guide template (Claude customizes per project)
-├── jb-components.md             ← JB component registry reference (copy to your project)
-├── pre-deploy-review.md         ← Paste into Claude Code before deploying — security/perf audit
+◇  Project scaffolded
 │
-├── prompt-engineering.md        ← Token economy, prompt formula, rescue system
-├── deployment.md                ← Vercel, Netlify, VPS, Cloudflare, SSL
-├── environment-variables.md     ← Step-by-step for every secret
-├── database-guide.md            ← Neon, Prisma, schema patterns, migrations
-├── design-system-guide.md       ← Design principles, color palettes, component styles
-├── troubleshooting.md           ← Symptoms → fixes, AI rescue protocols
-└── monetization-guide.md        ← Stripe, webhooks, feature gating, billing
+╭─ Let's plan your app ──────────────────────────────────╮
+│  We'll ask a few questions so we can generate          │
+│  your 4 VibeKit project files.                         │
+╰────────────────────────────────────────────────────────╯
+│
+◇  Describe your app idea in 1-3 sentences:
+│  A school management system where teachers manage
+│  students and parents can pay fees online.
 ```
 
-### Files to copy into your project
+**Step 2 — Pick your provider**
 
-When starting a new project, copy these from the VibeKit repo into your project root:
+```
+◇  Which AI provider should build your project?
+│  ● Claude Code
+│  ○ Codex (OpenAI)   not installed
+│  ○ Gemini CLI       not installed
+│  ○ OpenCode         not installed
+```
 
-| File                   | Purpose                                                  |
-| ---------------------- | -------------------------------------------------------- |
-| `master_prompt.md`     | Claude Code reads this first — tech stack + coding rules |
-| `jb-components.md`     | Reference for when to install which JB component         |
-| `pre-deploy-review.md` | Paste into Claude Code before deploying for an audit     |
+**Step 3 — Session 1: Planning**
 
-Claude (in the planning step) will generate `project-description.md`, `project-phases.md`, `design-style-guide.md`, and `prompt.md` for you.
+Your app idea is injected into the full VibeKit planning prompt and written to `CLAUDE.md`. The provider launches and interviews you about your app:
+
+- Features, data model, user roles
+- Integrations (auth, payments, file uploads, email)
+- Visual design (brand color, typography, dark mode)
+
+Then it generates **4 project files** directly in your project:
+
+| File | Purpose |
+|---|---|
+| `project-description.md` | Complete app spec — features, data model, pages, integrations |
+| `project-phases.md` | Phase-by-phase build blueprint with checkboxes |
+| `design-style-guide.md` | Fully customized design system (colors, typography, components) |
+| `prompt.md` | The build prompt for Session 2 |
+
+Close the provider when planning is done.
+
+**Step 4 — Session 2: Build**
+
+The CLI detects the generated files and offers to start the build session:
+
+```
+◇  Planning files detected
+│
+◇  Session 2 — Build. Start Claude Code now?
+│  Yes
+│
+●  Claude Code will read prompt.md and start Phase 1.
+```
+
+The provider reads `prompt.md` which instructs it to:
+
+1. Read `.vibekit/master_prompt.md` — tech stack rules, Prisma v7 patterns, coding standards
+2. Read `design-style-guide.md` — the custom design system
+3. Read `.vibekit/jb-components.md` — JB component registry (use these before building from scratch)
+4. Read `project-description.md` + `project-phases.md` — the plan
+5. Start Phase 1 — Foundation and stop after each phase for confirmation
 
 ---
 
-## Pre-Deploy Code Review
+## Installation
 
-Before shipping to production, run [`pre-deploy-review.md`](./pre-deploy-review.md) in Claude Code. It performs a senior-level audit covering:
+```bash
+npx create-vibekit-app my-app
 
-- **Performance** — N+1 queries, missing pagination, expensive operations
-- **Security** — unauthenticated routes, SQL injection, missing rate limiting, exposed secrets
-- **Background tasks** — webhook idempotency, job retries, distributed locks
-- **Resource consumption** — memory leaks, unclosed streams, missing timeouts
+# or with a package manager
+pnpm dlx create-vibekit-app my-app
+```
 
-Claude Code writes the findings to `pre-deploy-review-report.md`. Address every Critical issue before deploying. This is a phase task in every VibeKit project.
+Node 18+ required.
 
 ---
 
-## JB Component Registry
+## What gets created
 
-**Registry Reference:** [jb.desishub.com/blog/jb-component-registry-complete-reference](https://jb.desishub.com/blog/jb-component-registry-complete-reference)
+```
+my-app/
+├── .vibekit/                        <- gitignored, auto-read by agent
+│   ├── master_prompt.md             <- tech stack rules + Prisma v7 patterns
+│   ├── jb-components.md             <- JB component registry reference
+│   ├── pre-deploy-review.md         <- pre-deploy audit checklist
+│   ├── database-guide.md            <- Neon + Prisma reference
+│   ├── deployment.md                <- Vercel, Cloudflare, DNS
+│   ├── environment-variables.md     <- every env var, step by step
+│   ├── monetization-guide.md        <- Stripe, webhooks, billing
+│   ├── prompt-engineering.md        <- prompting techniques + rescue protocols
+│   └── troubleshooting.md           <- symptom -> fix playbook
+│
+├── .env.example                     <- base env template
+├── .gitignore                       <- includes .vibekit/ and .env.local
+└── CLAUDE.md                        <- planning prompt with your idea injected
+```
 
-**Framework Reference:** [`jb-components.md`](./jb-components.md) — Detailed guide with install commands, env vars, prerequisites, and when-to-use for each major component.
+After Session 1 completes, the agent also writes:
 
-Production-ready shadcn components for auth, data tables, forms, file uploads, e-commerce, and more. Claude Code checks `jb-components.md` before building features from scratch.
+```
+├── project-description.md
+├── project-phases.md
+├── design-style-guide.md
+└── prompt.md
+```
+
+---
+
+## Provider support
+
+| Provider | Detect | Auth check | Tested |
+|---|---|---|---|
+| Claude Code | Yes | Credential file + `ANTHROPIC_API_KEY` | Yes |
+| Codex (OpenAI) | Yes | `OPENAI_API_KEY` | No |
+| Gemini CLI | Yes | Credential file + `GOOGLE_API_KEY` | No |
+| OpenCode | Yes | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | No |
+
+If you test on a provider that isn't marked Yes, please open an issue or PR with your findings.
+
+---
+
+## The VibeKit standard stack
+
+Every project built with this framework uses:
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5.9 |
+| Database | Neon Serverless Postgres |
+| ORM | Prisma v7 |
+| Auth | Better Auth |
+| Data fetching | React Query + Fetch API |
+| Validation | Zod + React Hook Form |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| PDF | @react-pdf/renderer |
+| Excel | xlsx |
+| Email | Resend + React Email |
+| Payments | Stripe |
+| File storage | Cloudflare R2 / UploadThing |
+| Deployment | Vercel + Cloudflare |
+| Components | JB Component Registry |
+
+---
+
+## Credits
+
+This CLI is built on top of the **VibeKit Framework** created by [JB (Muke Johnbaptist)](https://jb.desishub.com) of [Desishub Technologies](https://desishub.com).
+
+- Original framework: [github.com/MUKE-coder/vibekit](https://github.com/MUKE-coder/vibekit)
+- JB Component Registry: [jb.desishub.com/blog/jb-component-registry-complete-reference](https://jb.desishub.com/blog/jb-component-registry-complete-reference)
+- Framework docs site: [vibekit.desishub.com](https://vibekit.desishub.com)
+
+The planning prompts, master prompt, tech stack decisions, design system approach, and JB component registry are all JB's original work. This repo wraps them in a CLI so you don't have to copy-paste anything manually.
 
 ---
 
 ## Contributing
 
-VibeKit is community-driven — every component in the registry was built by someone shipping with AI in production. **We're actively looking for new components.**
+This is early software. It works, but it has rough edges, untested paths, and provider-specific quirks that haven't been hit yet. Contributions are very welcome.
 
-If you've built something reusable — auth flow, payment widget, AI feature, dashboard primitive, search component — please contribute it. Once merged:
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide.
 
-- Your component gets a permanent doc page at `vibekit.desishub.com/components/<slug>`
-- It's listed in [`jb-components.md`](./jb-components.md), which every Claude Code agent reads
-- It becomes part of the framework's default toolkit across thousands of builds
+Quick ways to help:
 
-**Read the full contribution guide:** [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-**Quick start:**
-
-1. Build & host your component (shadcn-compatible registry)
-2. Write a doc page anywhere accessible
-3. Fork, edit `web/src/lib/components-data.ts`, append your entry using [the schema](./CONTRIBUTING.md#the-component-schema)
-4. Open a PR with the `new-component.md` template — we review weekly
-
-Other contributions (docs fixes, framework refinements, bug reports) are also welcome — open an issue or PR.
+- **Found a bug?** [Open an issue](https://github.com/MUKE-coder/vibekit/issues/new?template=bug-report.md)
+- **Tested on an unsupported provider or OS?** Open an issue with your findings
+- **Fixed something?** Open a PR — no ceremony required for bug fixes
+- **New provider support?** Add a file to `packages/create-vibekit-app/src/providers/` and open a PR
 
 ---
 
@@ -215,4 +215,4 @@ MIT — use freely, build boldly.
 
 ---
 
-_VibeKit — Built by [JB (Muke Johnbaptist)](https://jb.desishub.com) · [Desishub Technologies](https://desishub.com)_
+*VibeKit Framework by [JB (Muke Johnbaptist)](https://jb.desishub.com) · CLI by the community*
