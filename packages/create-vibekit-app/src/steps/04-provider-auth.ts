@@ -1,15 +1,20 @@
-export async function ensureAuth(provider: any) {
-  console.log(`Checking auth for ${provider.name}...`);
+import { spinner, note, log } from "@clack/prompts";
+import pc from "picocolors";
+import type { Provider } from "../providers";
+
+export async function ensureAuth(provider: Provider): Promise<boolean> {
+  const s = spinner();
+  s.start(`Checking ${pc.bold(provider.name)} authentication...`);
+
   const ok = await provider.checkAuth();
-  if (!ok) {
-    console.log(
-      `No credentials found for ${provider.name}. Please follow the provider instructions to authenticate.`,
-    );
-    // Minimal guidance: look for env var
-    console.log(
-      `Hint: set the environment variable indicated by the provider or place credentials where the provider expects them.`,
-    );
+
+  if (ok) {
+    s.stop(`${pc.bold(provider.name)} ${pc.green("authenticated")} ✓`);
   } else {
-    console.log(`${provider.name} authenticated.`);
+    s.stop(`${pc.bold(provider.name)} ${pc.yellow("credentials not detected")}`);
+    note(provider.authHint, pc.yellow("Authentication required"));
+    log.warn("Continuing anyway — the provider may still work if credentials are loaded in your shell session.");
   }
+
+  return ok;
 }

@@ -1,10 +1,11 @@
 import path from "path";
-import fs from "fs";
+import { spinner } from "@clack/prompts";
 import { copyTemplates } from "../generator";
 
-export async function projectSetup(dest: string) {
+export async function projectSetup(dest: string): Promise<void> {
   const templatesRoot = path.resolve(__dirname, "..", "..", "templates");
-  console.log(`Copying bundled templates from ${templatesRoot} to ${dest}`);
+  const s = spinner();
+  s.start("Scaffolding project files...");
   await copyTemplates(templatesRoot, dest);
-  console.log("Project scaffolded (templates copied).");
+  s.stop("Project scaffolded.");
 }
