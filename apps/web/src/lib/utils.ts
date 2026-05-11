@@ -19,7 +19,8 @@ export const SITE = {
   // Fork maintainer
   author: "Moses Kisakye",
   authorUrl: "https://github.com/mosespace",
-  authorAvatar: "https://github.com/mosespace.png",
+  authorAvatar:
+    "https://media.licdn.com/dms/image/v2/D5603AQHCxzu2HIx-4g/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718217272899?e=2147483647&v=beta&t=hIqPNWFHlJtHf45YH1ejnQ2tlMQNZDWt6FLBT9y1pxE",
   // Original creator
   originalAuthor: "JB (Muke Johnbaptist) · Desishub Technologies",
   originalAuthorUrl: "https://jb.desishub.com",
