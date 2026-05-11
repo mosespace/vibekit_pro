@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { intro, outro, text, isCancel, cancel } from "@clack/prompts";
 import pc from "picocolors";
+import { collectIdea } from "./steps/00-collect-idea";
 import { projectSetup } from "./steps/01-project-setup";
 import { detectProviders } from "./steps/02-provider-detect";
 import { selectProvider } from "./steps/03-provider-select";
@@ -30,18 +31,22 @@ export async function run() {
   }
 
   const dest = path.resolve(process.cwd(), projectName);
-
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest, { recursive: true });
-  }
+  if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
 
   await projectSetup(dest);
+
+  // Collect the app idea before detecting providers so the UX flows naturally
+  const appIdea = await collectIdea();
 
   const detected = await detectProviders();
   const chosen = await selectProvider(detected);
   const authed = await ensureAuth(chosen);
-  await handoffToAgent(chosen, dest, authed);
-  await postPlanning(dest);
 
-  outro(pc.green("All done! Open the project folder and follow the next steps above."));
+  // Session 1 — Planning: injects idea into context file, launches provider
+  await handoffToAgent(chosen, dest, authed, appIdea);
+
+  // Session 2 — Build: detects generated files, offers to launch the build session
+  await postPlanning(dest, chosen);
+
+  outro(pc.green("Done! Your project is ready."));
 }

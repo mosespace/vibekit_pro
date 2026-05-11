@@ -1,4 +1,4 @@
-# Prompt Engineering for Vibe Coders
+# Prompt Engineering for Vibe Coder
 
 > The difference between a messy, broken build and a clean production app is not the complexity — it is the quality of your prompts.
 
@@ -47,12 +47,12 @@ A token is roughly 4 characters of text, or about ¾ of a word. When you write a
 
 ### Where Most Tokens Go (And Are Wasted)
 
-| Source | % of Token Usage | Controllable? |
-|---|---|---|
-| AI reading your existing codebase | ~35% | Partly — keep code clean |
-| AI writing new code from scratch | ~40% | Yes — use pre-built components |
-| AI re-reading context after errors | ~15% | Yes — better prompts prevent errors |
-| Your prompt text | ~10% | Yes — be concise and specific |
+| Source                             | % of Token Usage | Controllable?                       |
+| ---------------------------------- | ---------------- | ----------------------------------- |
+| AI reading your existing codebase  | ~35%             | Partly — keep code clean            |
+| AI writing new code from scratch   | ~40%             | Yes — use pre-built components      |
+| AI re-reading context after errors | ~15%             | Yes — better prompts prevent errors |
+| Your prompt text                   | ~10%             | Yes — be concise and specific       |
 
 ### The Pre-Built Component Advantage
 
@@ -101,16 +101,18 @@ This means:
 Each prompt should do **one thing**. Not "build auth, set up the database, create the dashboard, add the data table, and style the sidebar." That is five prompts pretending to be one.
 
 **Wrong:**
+
 ```
-Build me a complete SaaS app with authentication, a dashboard, user management, 
+Build me a complete SaaS app with authentication, a dashboard, user management,
 billing with Stripe, email notifications, and deploy it to Vercel.
 ```
 
 **Right (Phase 1 only):**
+
 ```
 I am building a project management SaaS. The design system is: [paste design system].
-Install the Better Auth UI component and connect it to my Neon database. 
-Set up login, signup, and Google OAuth only. 
+Install the Better Auth UI component and connect it to my Neon database.
+Set up login, signup, and Google OAuth only.
 Do not build any other pages yet.
 ```
 
@@ -131,15 +133,17 @@ Every effective Claude Code prompt has five parts. You do not need to label them
 ### Example: Adding a Data Table
 
 **Bad prompt:**
+
 ```
 Add a data table to show all users.
 ```
 
 **Pro prompt using the formula:**
+
 ```
 [CONTEXT]
-This is a SaaS project management app built with Next.js. Phase 2 is in progress. 
-Authentication with Better Auth is already working. The Neon database has a Prisma 
+This is a SaaS project management app built with Next.js. Phase 2 is in progress.
+Authentication with Better Auth is already working. The Neon database has a Prisma
 schema with a User model and a Project model.
 
 [GOAL]
@@ -245,7 +249,7 @@ Primary user: [Describe the main user]
 Secondary user (if any): [Admin, client, guest, etc.]
 
 WHAT THE APP MUST DO (Core Features)
-1. [Feature 1 — be specific. Not "user management" but "users can sign up with email or Google, 
+1. [Feature 1 — be specific. Not "user management" but "users can sign up with email or Google,
    update their profile photo and name, and delete their account"]
 2. [Feature 2]
 3. [Feature 3]
@@ -296,8 +300,8 @@ TECH STACK
 
 1. Fill in the PRD template for your app
 2. On your first Claude Code message in Phase 1, paste the full PRD before any other instruction
-3. Tell Claude Code: *"Read this PRD. We will build in phases. In this first session, only do Phase 1: install Better Auth UI, connect Neon, and set up the base layout. Do not build any other features yet."*
-4. For each subsequent session, refer back to the PRD: *"Referring to the PRD I shared at the start, now let's build the [feature]."*
+3. Tell Claude Code: _"Read this PRD. We will build in phases. In this first session, only do Phase 1: install Better Auth UI, connect Neon, and set up the base layout. Do not build any other features yet."_
+4. For each subsequent session, refer back to the PRD: _"Referring to the PRD I shared at the start, now let's build the [feature]."_
 
 ---
 
@@ -431,18 +435,18 @@ Output only the React component code. No explanation needed.
 
 ## Claude Code vs V0 Decision Framework
 
-| Situation | Use | Reasoning |
-|---|---|---|
-| Building a landing page | V0 first, then Claude Code | V0 is faster for visual design |
-| Building a dashboard layout | V0 first, then Claude Code | Layout is visual work |
-| Connecting a page to a database | Claude Code | V0 cannot write backend logic |
-| Adding an API route | Claude Code | V0 is frontend-only |
-| Creating a form with validation | Claude Code | Form logic needs server-side handling |
-| Designing a card component | V0 | Pure UI, iterate visually |
-| Setting up authentication | Claude Code | Requires backend, database, env vars |
-| Making a page look unique | V0 first | Visual iteration is V0's strength |
-| Fixing a logic bug | Claude Code | Logic work, not visual |
-| Trying 3 different layouts | V0 | Visual comparison is instant |
+| Situation                       | Use                        | Reasoning                             |
+| ------------------------------- | -------------------------- | ------------------------------------- |
+| Building a landing page         | V0 first, then Claude Code | V0 is faster for visual design        |
+| Building a dashboard layout     | V0 first, then Claude Code | Layout is visual work                 |
+| Connecting a page to a database | Claude Code                | V0 cannot write backend logic         |
+| Adding an API route             | Claude Code                | V0 is frontend-only                   |
+| Creating a form with validation | Claude Code                | Form logic needs server-side handling |
+| Designing a card component      | V0                         | Pure UI, iterate visually             |
+| Setting up authentication       | Claude Code                | Requires backend, database, env vars  |
+| Making a page look unique       | V0 first                   | Visual iteration is V0's strength     |
+| Fixing a logic bug              | Claude Code                | Logic work, not visual                |
+| Trying 3 different layouts      | V0                         | Visual comparison is instant          |
 
 ### The V0 → Claude Code Handoff Prompt
 
@@ -472,7 +476,7 @@ These are the most common prompting mistakes that waste money and cause problems
 ### ❌ The Everything Prompt
 
 ```
-Build me a full SaaS app with auth, dashboard, user management, billing, email, 
+Build me a full SaaS app with auth, dashboard, user management, billing, email,
 file uploads, and deploy it to Vercel with a custom domain.
 ```
 
@@ -490,10 +494,11 @@ Make the dashboard look better.
 
 **Why it fails:** "Better" means nothing. Claude Code will guess — and guess wrong.
 
-**Fix:** 
+**Fix:**
+
 ```
-The dashboard header has too much whitespace and the card borders are too dark. 
-Change border-gray-300 to border-slate-200 and reduce the header padding from p-8 to p-6. 
+The dashboard header has too much whitespace and the card borders are too dark.
+Change border-gray-300 to border-slate-200 and reduce the header padding from p-8 to p-6.
 Do not change anything else.
 ```
 
@@ -508,8 +513,9 @@ Something is wrong with the login page. Can you rewrite it?
 **Why it fails:** "Rewrite" means Claude Code scraps working code and starts over — losing fixes you made and introducing new bugs.
 
 **Fix:**
+
 ```
-The login page has a specific problem: [describe it exactly]. 
+The login page has a specific problem: [describe it exactly].
 Do not rewrite the page. Only change [the specific thing that is wrong].
 Here is the current code: [paste it].
 ```
@@ -525,6 +531,7 @@ Add a users table to the admin dashboard.
 **Why it fails:** Claude Code might decide to change the navigation, update the layout, rename files, or modify the authentication setup as "helpful" side effects.
 
 **Fix:** Always end with constraints:
+
 ```
 Do not touch: navigation, authentication, layout files, Prisma schema, or any other page.
 Only create: the /dashboard/admin/users page and its API route.
@@ -548,7 +555,7 @@ Before starting any new phase in Claude Code, download your project or note the 
 
 ### The Minimal Scope Test
 
-Before writing a prompt, ask yourself: *"What is the smallest version of this feature that proves it works?"* Build that first. Then expand.
+Before writing a prompt, ask yourself: _"What is the smallest version of this feature that proves it works?"_ Build that first. Then expand.
 
 For example, instead of building a complete user management system, first build: **one page that shows a list of users from the database.** Once that works, add search. Then pagination. Then actions.
 
@@ -656,4 +663,4 @@ MONEY SAVING RULES
 
 ---
 
-*Part of the [VibeKit Framework](../README.md) — github.com/MUKE-coder/vibekit*
+_Part of the [VibeKit Framework](../README.md) — github.com/MUKE-coder/vibekit_

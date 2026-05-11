@@ -14,7 +14,7 @@ export interface Provider {
   authHint: string;
   findBinary(): Promise<string | null>;
   checkAuth(): Promise<boolean>;
-  launch(projectDir: string, binary: string): void;
+  launch(projectDir: string, binary: string, initialMessage: string): void;
 }
 
 function makeProvider(opts: {
@@ -25,7 +25,6 @@ function makeProvider(opts: {
   contextFile: string;
   authHint: string;
   checkAuth(): Promise<boolean>;
-  launch(projectDir: string, binary: string): void;
 }): Provider {
   return {
     ...opts,
@@ -35,6 +34,13 @@ function makeProvider(opts: {
         if (p) return p;
       }
       return null;
+    },
+    launch(projectDir, binary, initialMessage) {
+      spawnSync(binary, [initialMessage], {
+        cwd: projectDir,
+        stdio: "inherit",
+        shell: process.platform === "win32",
+      });
     },
   };
 }
@@ -51,15 +57,12 @@ export const providers: Provider[] = [
     async checkAuth() {
       if (process.env["ANTHROPIC_API_KEY"]) return true;
       if (process.env["CLAUDE_API_KEY"]) return true;
-      // OAuth credentials written by `claude auth login`
       const credPaths = [
         path.join(os.homedir(), ".claude", ".credentials.json"),
         path.join(os.homedir(), ".claude", "credentials.json"),
-        // Windows: %APPDATA%\Claude\credentials.json
         process.env["APPDATA"]
           ? path.join(process.env["APPDATA"]!, "Claude", "credentials.json")
           : "",
-        // Windows: %LOCALAPPDATA%\Claude\credentials.json
         process.env["LOCALAPPDATA"]
           ? path.join(
               process.env["LOCALAPPDATA"]!,
@@ -69,18 +72,6 @@ export const providers: Provider[] = [
           : "",
       ].filter(Boolean);
       return credPaths.some((p) => fs.existsSync(p));
-    },
-    launch(projectDir, binary) {
-      // Pass an initial message so Claude reads CLAUDE.md and starts planning immediately
-      spawnSync(
-        binary,
-        ["Read CLAUDE.md and begin building the project exactly as described in the planning prompt."],
-        {
-          cwd: projectDir,
-          stdio: "inherit",
-          shell: process.platform === "win32",
-        },
-      );
     },
   }),
 
@@ -94,17 +85,6 @@ export const providers: Provider[] = [
     async checkAuth() {
       return Boolean(process.env["OPENAI_API_KEY"]);
     },
-    launch(projectDir, binary) {
-      spawnSync(
-        binary,
-        ["Read AGENTS.md and begin building the project exactly as described in the planning prompt."],
-        {
-          cwd: projectDir,
-          stdio: "inherit",
-          shell: process.platform === "win32",
-        },
-      );
-    },
   }),
 
   makeProvider({
@@ -113,24 +93,11 @@ export const providers: Provider[] = [
     binaries: ["gemini"],
     promptFile: "planning-prompts/gemini.md",
     contextFile: "GEMINI.md",
-    authHint:
-      "Run `gemini auth login` or set GOOGLE_API_KEY / GEMINI_API_KEY.",
+    authHint: "Run `gemini auth login` or set GOOGLE_API_KEY / GEMINI_API_KEY.",
     async checkAuth() {
       if (process.env["GOOGLE_API_KEY"]) return true;
       if (process.env["GEMINI_API_KEY"]) return true;
-      const credFile = path.join(os.homedir(), ".gemini", "credentials.json");
-      return fs.existsSync(credFile);
-    },
-    launch(projectDir, binary) {
-      spawnSync(
-        binary,
-        ["Read GEMINI.md and begin building the project exactly as described in the planning prompt."],
-        {
-          cwd: projectDir,
-          stdio: "inherit",
-          shell: process.platform === "win32",
-        },
-      );
+      return fs.existsSync(path.join(os.homedir(), ".gemini", "credentials.json"));
     },
   }),
 
@@ -145,17 +112,6 @@ export const providers: Provider[] = [
       return (
         Boolean(process.env["OPENAI_API_KEY"]) ||
         Boolean(process.env["ANTHROPIC_API_KEY"])
-      );
-    },
-    launch(projectDir, binary) {
-      spawnSync(
-        binary,
-        ["Read OPENCODE.md and begin building the project exactly as described in the planning prompt."],
-        {
-          cwd: projectDir,
-          stdio: "inherit",
-          shell: process.platform === "win32",
-        },
       );
     },
   }),
