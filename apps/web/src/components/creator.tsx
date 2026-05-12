@@ -168,6 +168,12 @@ export function Creator() {
           { y: 8, opacity: 0, stagger: 0.05, duration: 0.3 },
           "-=0.2",
         );
+      // ensure ScrollTrigger calculations are up-to-date on first load
+      try {
+        ScrollTrigger.refresh();
+      } catch (e) {
+        /* noop */
+      }
     },
     { scope: root },
   );
