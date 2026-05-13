@@ -1,5 +1,7 @@
 import fs from "fs";
 import path from "path";
+import { scaffoldMobileApp } from "./mobile-scaffold";
+import { scaffoldMonorepo } from "./monorepo-scaffold";
 
 // Folders inside templates/ that are CLI-internal  never copied to the project
 const SKIP_DIRS = new Set(["planning-prompts"]);
@@ -76,3 +78,6 @@ function writeGitignore(destRoot: string) {
     fs.writeFileSync(gitignorePath, entries, "utf8");
   }
 }
+
+// Export platform scaffolders
+export { scaffoldMobileApp, scaffoldMonorepo };

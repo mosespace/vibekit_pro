@@ -3,6 +3,7 @@ import path from "path";
 import { confirm, isCancel, cancel, note, log } from "@clack/prompts";
 import pc from "picocolors";
 import type { Provider } from "../providers";
+import type { PlatformSelection } from "./02-platform-select";
 
 const PLANNING_FILES = [
   "project-description.md",
@@ -16,6 +17,7 @@ const BUILD_PROMPT_CANDIDATES = ["prompt.md", "plan.md", "final_prompt.md"];
 export async function postPlanning(
   dest: string,
   provider: Provider,
+  platform: PlatformSelection,
 ): Promise<void> {
   const missing = PLANNING_FILES.filter(
     (f) => !fs.existsSync(path.join(dest, f)),
@@ -48,10 +50,35 @@ export async function postPlanning(
     `Planning files detected: ${pc.green("project-description.md")}, ${pc.green("project-phases.md")}, ${pc.green("design-style-guide.md")}, ${pc.green(buildPromptFile)}`,
   );
 
+  // Detect platform-specific files
+  const hasWebConfig =
+    fs.existsSync(path.join(dest, "next.config.ts")) ||
+    fs.existsSync(path.join(dest, "apps/web/next.config.ts"));
+  const hasMobileConfig =
+    fs.existsSync(path.join(dest, "app.json")) ||
+    fs.existsSync(path.join(dest, "apps/mobile/app.json"));
+
+  if (hasMobileConfig) {
+    const easPath =
+      path.join(dest, "eas.json") || path.join(dest, "apps/mobile/eas.json");
+    if (fs.existsSync(easPath)) {
+      log.info(
+        `EAS config detected  run ${pc.cyan("pnpm eas build")} when ready.`,
+      );
+    }
+  }
+
   const prismaPath = path.join(dest, "prisma", "schema.prisma");
   if (fs.existsSync(prismaPath)) {
     log.info(
       `Prisma schema detected  after Phase 1 completes, run:\n  ${pc.cyan("pnpm install && pnpm prisma generate")}`,
+    );
+  }
+
+  // For monorepos, suggest pnpm install at root
+  if (platform.hasMobile && platform.hasWeb) {
+    log.info(
+      `Monorepo detected  run ${pc.cyan("pnpm install")} at the root to bootstrap all workspaces.`,
     );
   }
 
@@ -66,8 +93,12 @@ export async function postPlanning(
   }
 
   if (!shouldBuild) {
+    const cdPath =
+      platform.hasMobile && platform.hasWeb
+        ? `${dest}/apps/${platform.hasMobile && platform.hasWeb ? "mobile" : "web"}`
+        : dest;
     note(
-      `cd ${pc.cyan(dest)}\n${pc.cyan(path.basename(provider.binaries[0]))} "${pc.dim(`Read ${buildPromptFile} and begin building Phase 1.`)}"`,
+      `cd ${pc.cyan(cdPath)}\n${pc.cyan(path.basename(provider.binaries[0]))} "${pc.dim(`Read ${buildPromptFile} and begin building Phase 1.`)}"`,
       "Run manually when ready",
     );
     return;
@@ -86,6 +117,6 @@ export async function postPlanning(
   provider.launch(
     dest,
     binary,
-    `Read ${buildPromptFile} and begin building the project. Follow the instructions exactly: read master_prompt.md, design-style-guide.md, jb-components.md, project-description.md, and project-phases.md in order. Then start Phase 1  Foundation.`,
+    `Read ${buildPromptFile} and begin building the project. Follow the instructions exactly: read master_prompt.md, design-style-guide.md, vibekit-native-components.md (if mobile), project-description.md, and project-phases.md in order. Then start Phase 1  Foundation.`,
   );
 }
