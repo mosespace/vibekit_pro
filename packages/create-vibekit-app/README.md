@@ -208,6 +208,14 @@ npm pack --dry-run
 npm publish
 ```
 
+After publishing, push the version tag to GitHub so the release workflow can create a GitHub Release:
+
+```bash
+git push origin main --follow-tags
+```
+
+The tag created by the publish scripts uses the `create-vibekit-app-v` prefix, so GitHub Actions can match it and publish a release automatically.
+
 ### Version bumps
 
 ```bash
