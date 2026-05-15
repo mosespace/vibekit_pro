@@ -325,3 +325,13 @@ MIT use freely, build boldly.
 
 _VibeKit Framework by [JB (Muke Johnbaptist)](https://jb.desishub.com) · CLI by the community_
 ```
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=mosespace%2Fvibekit_pro&type=date&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=mosespace/vibekit_pro&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=mosespace/vibekit_pro&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=mosespace/vibekit_pro&type=date&legend=top-left" />
+ </picture>
+</a>
