@@ -16,10 +16,12 @@ export async function projectSetup(
   s.start("Scaffolding project files...");
 
   // Copy common templates first
-  await copyTemplates(templatesRoot, dest);
+  await copyTemplates(templatesRoot, dest, {
+    includeExpo: platform.hasMobile,
+  });
 
   // Then scaffold platform-specific files
-  if (platform.hasMobile && platform.hasMobile) {
+  if (platform.hasMobile && platform.hasWeb) {
     // Both web and mobile - create monorepo structure
     await scaffoldMonorepo(dest, platform.monorepoType || "monorepo-both");
   } else if (platform.hasMobile) {
