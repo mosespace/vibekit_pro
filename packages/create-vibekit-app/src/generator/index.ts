@@ -12,7 +12,15 @@ const ROOT_FILES = new Set(["env.example"]);
 // Hidden folder that holds VibeKit framework files
 export const VIBEKIT_DIR = ".vibekit";
 
-export async function copyTemplates(srcRoot: string, destRoot: string) {
+type CopyTemplateOptions = {
+  includeExpo?: boolean;
+};
+
+export async function copyTemplates(
+  srcRoot: string,
+  destRoot: string,
+  options: CopyTemplateOptions = {},
+) {
   if (!fs.existsSync(srcRoot)) {
     throw new Error(`Templates root not found: ${srcRoot}`);
   }
@@ -23,6 +31,9 @@ export async function copyTemplates(srcRoot: string, destRoot: string) {
   const entries = fs.readdirSync(srcRoot, { withFileTypes: true });
   for (const ent of entries) {
     if (ent.isDirectory() && SKIP_DIRS.has(ent.name)) continue;
+    if (ent.isDirectory() && ent.name === "expo" && !options.includeExpo) {
+      continue;
+    }
     const srcPath = path.join(srcRoot, ent.name);
     if (ent.isDirectory()) {
       copyDirRecursive(srcPath, path.join(vibkitDest, ent.name));

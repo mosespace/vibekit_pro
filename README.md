@@ -1,6 +1,6 @@
 # VIBEKIT CLI
 
-![VibeKit CLI](/assets/screenshots/clean-sharex.png)
+![VibeKit CLI](/assets/screenshots/clean-sharex-beautified.png)
 
 > A CLI that automates the [VibeKit Framework](https://github.com/MUKE-coder/vibekit) workflow for building production apps with AI agents. Plan your app with an AI agent, generate project files, then build automatically — for **web (Next.js), mobile (Expo), or full-stack (Turbo) projects**.
 
